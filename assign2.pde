@@ -1,3 +1,5 @@
+
+
 PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 
 void setup () {
@@ -77,7 +79,7 @@ void draw() {
         treasurePosY = random(60,420);
       }
     }
-    if(heroPosX + 51 >= enemyPosX - 50 && heroPosX <= enemyPosX + 11 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
+    if(heroPosX + 51 >= enemyPosX - 60 && heroPosX <= enemyPosX + 1 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
       if(hpPercentage > 0.21){
         hpPercentage -= 0.2;
         enemyPosX = 0;
@@ -91,10 +93,10 @@ void draw() {
       enemyPosY = random(100,420);
       score += 1;
     }
-    image(enemy, -50+enemyPosX, enemyPosY); 
+    image(enemy, -60+enemyPosX, enemyPosY); 
     enemyPosY = enemyPosY*0.98+heroPosY*0.02;
     enemyPosX += 4 + abs(enemyPosX - heroPosX)/150;
-    enemyPosX = enemyPosX % 680; //enemy movement
+    enemyPosX = enemyPosX % 700; //enemy movement
   }
 }
 
