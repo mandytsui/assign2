@@ -66,12 +66,10 @@ void draw() {
     bg1Pos = bg1Pos % 1280;
     bg2Pos += 5;
     bg2Pos = bg2Pos % 1280; //background scrolling
-    image(fighter, heroPosX, heroPosY); // fighter position
     fill(255,0,0);
     noStroke();
-    rect(45,34,hpAmount*hpPercentage,15); //hp amount
-    image(hp, 40, 30); //hp outline
     image(treasure, treasurePosX, treasurePosY); //treasure
+    image(fighter, heroPosX, heroPosY); // fighter position
     if(heroPosX + 51 >= treasurePosX && heroPosX <= treasurePosX + 41 && heroPosY + 51 >= treasurePosY && heroPosY <= treasurePosY + 41){
       if(hpPercentage < 0.99){
         hpPercentage += 0.1;
@@ -79,7 +77,7 @@ void draw() {
         treasurePosY = random(60,420);
       }
     }
-    if(heroPosX + 51 >= enemyPosX - 60 && heroPosX <= enemyPosX + 1 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
+    if(heroPosX + 51 >= enemyPosX - 100 && heroPosX <= enemyPosX -39 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
       if(hpPercentage > 0.21){
         hpPercentage -= 0.2;
         enemyPosX = 0;
@@ -90,13 +88,15 @@ void draw() {
       }
     }
     if(enemyPosX <= 6){
-      enemyPosY = random(100,420);
+      enemyPosY = random(60,420);
       score += 1;
     }
-    image(enemy, -60+enemyPosX, enemyPosY); 
-    enemyPosY = enemyPosY*0.98+heroPosY*0.02;
-    enemyPosX += 4 + abs(enemyPosX - heroPosX)/150;
-    enemyPosX = enemyPosX % 700; //enemy movement
+    image(enemy, -100+enemyPosX, enemyPosY); 
+    enemyPosY = enemyPosY*0.975+heroPosY*0.025;
+    enemyPosX += 4 + abs(enemyPosX - heroPosX)/100;
+    enemyPosX = enemyPosX % 760; //enemy movement
+    rect(45,34,hpAmount*hpPercentage,17); //hp amount
+    image(hp, 40, 30); //hp outline
   }
 }
 
