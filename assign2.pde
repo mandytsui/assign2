@@ -1,5 +1,4 @@
 
-
 PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 
 void setup () {
