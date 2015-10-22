@@ -71,7 +71,7 @@ void draw() {
     image(hp, 40, 30); //hp outline
     image(treasure, treasurePosX, treasurePosY); //treasure
     if(heroPosX + 51 >= treasurePosX && heroPosX <= treasurePosX + 41 && heroPosY + 51 >= treasurePosY && heroPosY <= treasurePosY + 41){
-      if(hpPercentage < 1.0){
+      if(hpPercentage < 0.99){
         hpPercentage += 0.1;
         treasurePosX = random(40,560);
         treasurePosY = random(60,420);
