@@ -75,14 +75,12 @@ void draw() {
         hpPercentage += 0.1;
         treasurePosX = random(40,560);
         treasurePosY = random(60,420);
-        println("HP = " + hpPercentage*100);
       }
     }
     if(heroPosX + 51 >= enemyPosX - 50 && heroPosX <= enemyPosX + 11 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
       if(hpPercentage > 0.21){
         hpPercentage -= 0.2;
         enemyPosX = 0;
-        println("HP = " + hpPercentage*100);
         score -= 1;
       }else{
         gameState=false;
@@ -92,7 +90,6 @@ void draw() {
     if(enemyPosX <= 6){
       enemyPosY = random(100,420);
       score += 1;
-      println("Score = " + score);
     }
     image(enemy, -50+enemyPosX, enemyPosY); 
     enemyPosY = enemyPosY*0.98+heroPosY*0.02;
