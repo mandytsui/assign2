@@ -20,6 +20,11 @@ boolean gameState = false;
 boolean endState = false;
 boolean startFlash = true;
 boolean endFlash = true;
+boolean upState = false;
+boolean downState = false;
+boolean leftState = false;
+boolean rightState = false;
+int heroSpeed = 10;
 int bg1Pos = 640;
 int bg2Pos = 0;
 int score = -1;
@@ -29,7 +34,7 @@ float heroPosX = 550;
 float heroPosY = 240;
 float enemyPosX = 0;
 float enemyPosY;
-float hpAmount = 200;
+float hpAmount = 195;
 float hpPercentage = 0.2;
 float treasurePosX = random(40,560);
 float treasurePosY = random(60,420);
@@ -62,13 +67,25 @@ void draw() {
   }else{
     image(bg1,-640+bg1Pos,0);
     image(bg2,-640+bg2Pos,0);
-    bg1Pos += 5;
+    bg1Pos += 10;
     bg1Pos = bg1Pos % 1280;
-    bg2Pos += 5;
+    bg2Pos += 10;
     bg2Pos = bg2Pos % 1280; //background scrolling
     fill(255,0,0);
     noStroke();
     image(treasure, treasurePosX, treasurePosY); //treasure
+    if(upState == true && heroPosY>0){
+      heroPosY -= heroSpeed;
+    }
+    if(downState == true && heroPosY<429){
+      heroPosY += heroSpeed;
+    }
+    if(leftState == true && heroPosX>0){
+      heroPosX -= heroSpeed;
+    }
+    if(rightState == true && heroPosX<589){
+      heroPosX += heroSpeed;
+    }
     image(fighter, heroPosX, heroPosY); // fighter position
     if(heroPosX + 51 >= treasurePosX && heroPosX <= treasurePosX + 41 && heroPosY + 51 >= treasurePosY && heroPosY <= treasurePosY + 41){
       if(hpPercentage < 0.99){
@@ -92,10 +109,10 @@ void draw() {
       score += 1;
     }
     image(enemy, -100+enemyPosX, enemyPosY); 
-    enemyPosY = enemyPosY*0.975+heroPosY*0.025;
-    enemyPosX += 4 + abs(enemyPosX - heroPosX)/100;
+    enemyPosY = enemyPosY*0.93+heroPosY*0.07;
+    enemyPosX += 8 + abs(enemyPosX - heroPosX)/40;
     enemyPosX = enemyPosX % 760; //enemy movement
-    rect(45,34,hpAmount*hpPercentage,17); //hp amount
+    rect(50,34,hpAmount*hpPercentage,17); //hp amount
     image(hp, 40, 30); //hp outline
   }
 }
@@ -116,14 +133,38 @@ void keyPressed(){
     }
   }
   if(key==CODED){
-    if(keyCode==UP && heroPosY>0){
-      heroPosY-=20;
-    }else if(keyCode==DOWN && heroPosY<429){
-      heroPosY+=20;
-    }else if(keyCode==LEFT && heroPosX>0){
-      heroPosX-=20;
-    }else if(keyCode==RIGHT && heroPosX<589){
-      heroPosX+=20;
+    switch(keyCode){
+      case UP:
+        upState = true;
+        break;
+      case DOWN:
+        downState = true;
+        break;
+      case LEFT:
+        leftState = true;
+        break;
+      case RIGHT:
+        rightState = true;
+        break;
+    }
+  }
+}
+
+void keyReleased(){
+  if(key==CODED){
+    switch(keyCode){
+      case UP:
+        upState = false;
+        break;
+      case DOWN:
+        downState = false;
+        break;
+      case LEFT:
+        leftState = false;
+        break;
+      case RIGHT:
+        rightState = false;
+        break;
     }
   }
 }
