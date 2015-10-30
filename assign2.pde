@@ -1,4 +1,5 @@
 
+
 PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 
 void setup () {
@@ -17,8 +18,8 @@ void setup () {
 
 boolean gameState = false;
 boolean endState = false;
-boolean startFlash = true;
-boolean endFlash = true;
+boolean startFlash = false;
+boolean endFlash = false;
 boolean upState = false;
 boolean downState = false;
 boolean leftState = false;
@@ -41,26 +42,20 @@ float treasurePosY = random(60,420);
 void draw() {
   if(gameState==false){
     if(endState==true){
-      if(endFlash==true){
+      if(mouseX <= 436 && mouseX >= 206 && mouseY <= 355 && mouseY >= 308){
         image(end1, 0, 0);
+        endFlash = true;
       }else{
         image(end2, 0, 0);
-      }
-      endBuffer+=1;
-      if(endBuffer==30){
-        endFlash = !endFlash;
-        endBuffer = 0;
+        endFlash = false;
       }
     }else{
-      if(startFlash==true){
+      if(mouseX <= 449 && mouseX >= 198 && mouseY <= 414 && mouseY >= 376){
         image(start1, 0, 0);
+        startFlash = true;
       }else{
         image(start2, 0, 0);
-      }
-      startBuffer+=1;
-      if(startBuffer==30){
-        startFlash = !startFlash;
-        startBuffer = 0;
+        startFlash = false;
       }
     }
   }else{
@@ -98,6 +93,7 @@ void draw() {
         hpPercentage -= 0.2;
         enemyPosX = 0;
         score -= 1;
+        println("CRASH");
       }else{
         gameState=false;
         endState=true;
@@ -108,29 +104,38 @@ void draw() {
       score += 1;
     }
     image(enemy, -100+enemyPosX, enemyPosY); 
-    enemyPosY = enemyPosY*0.93+heroPosY*0.07;
-    enemyPosX += 8 + abs(enemyPosX - heroPosX)/40;
+    float Yspeed = enemyPosY*0.93+heroPosY*0.07;
+    enemyPosY = Yspeed;
+    println("Y " + Yspeed);
+    float Xspeed = 8 + abs(enemyPosX - heroPosX)/40;
+    enemyPosX += Xspeed;
+    //println("X " + Xspeed);
     enemyPosX = enemyPosX % 760; //enemy movement
     rect(50,34,hpAmount*hpPercentage,17); //hp amount
     image(hp, 40, 30); //hp outline
   }
 }
 
+void mousePressed(){
+    if(endFlash){
+        endState = false;
+        hpPercentage = 0.2;
+        enemyPosX = 0;
+        heroPosX = 550;
+        heroPosY = 240;
+        treasurePosX = random(40,560);
+        treasurePosY = random(60,420);
+        score = -1;
+        endFlash = false;
+      }
+    if(startFlash){
+        gameState = true;
+        startFlash = false;
+      }
+}
+
+
 void keyPressed(){
-  if(keyCode==ENTER){
-    if(gameState==false && endState == true){
-      endState = false;
-      hpPercentage = 0.2;
-      enemyPosX = 0;
-      heroPosX = 550;
-      heroPosY = 240;
-      treasurePosX = random(40,560);
-      treasurePosY = random(60,420);
-      score = -1;
-    }else{
-      gameState = true;
-    }
-  }
   if(key==CODED){
     switch(keyCode){
       case UP:
