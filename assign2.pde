@@ -1,174 +1,243 @@
+PImage title,startNormal,startHovered,gameover,restartNormal,restartHovered;
+PImage groundhogDown,groundhogLeft,groundhogRight;
+PImage backGround;
+PImage soil;
+PImage life;
+PImage groundhog;
+PImage cabbage;
+float groundhogX=320,groundhogY=80;
+PImage soldier;
+PImage robot;
+int soldierX,soldierY;   
+int n;       //soldier
+final int GAME_START = 0, GAME_RUN = 1, GAME_WIN = 2, GAME_LOSE = 3;
+int gameState=0;
+int lifeNumber=2;
+int a,b,cabbageX,cabbageY; //cabbage
+boolean eatCabbage=false;
+boolean downPress=false,rightPress=false,leftPress=false;
+boolean groundhogOrignal=true;
+int frames = 0;
 
 
-PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
+boolean isMoving = false;
 
-void setup () {
-  size(640,480) ;
-  bg1 = loadImage ("img/bg1.png");
-  bg2 = loadImage ("img/bg2.png");
-  enemy = loadImage ("img/enemy.png");
-  fighter = loadImage ("img/fighter.png");
-  hp = loadImage ("img/hp.png");
-  treasure = loadImage ("img/treasure.png");
-  end1 = loadImage ("img/end1.png");
-  end2 = loadImage ("img/end2.png");
-  start1 = loadImage ("img/start1.png");
-  start2 = loadImage ("img/start2.png");
+
+void setup() {
+  frameRate(60);
+	size(640, 480, P2D);
+  title=loadImage("img/title.jpg");
+  startNormal=loadImage("img/startNormal.png");
+  startHovered=loadImage("img/startHovered.png");
+  groundhogDown=loadImage("img/groundhogDown.png");
+  groundhogLeft=loadImage("img/groundhogLeft.png");
+  groundhogRight=loadImage("img/groundhogRight.png");
+  gameover=loadImage("img/gameover.jpg");
+  restartNormal=loadImage("img/restartNormal.png");
+  restartHovered=loadImage("img/restartHovered.png");
+  life=loadImage("img/life.png");
+  cabbage=loadImage("img/cabbage.png");
+  groundhog=loadImage("img/groundhogIdle.png");
+	//soldier
+  n=floor(random(4));//soldier moving(Y)
+  
+  //cabbage
+  a=floor(random(8));
+  b=floor(random(4));
 }
-
-boolean gameState = false;
-boolean endState = false;
-boolean startFlash = false;
-boolean endFlash = false;
-boolean upState = false;
-boolean downState = false;
-boolean leftState = false;
-boolean rightState = false;
-int heroSpeed = 10;
-int bg1Pos = 640;
-int bg2Pos = 0;
-int score = -1;
-int startBuffer = 0;
-int endBuffer = 0;
-float heroPosX = 550;
-float heroPosY = 240;
-float enemyPosX = 0;
-float enemyPosY;
-float hpAmount = 195;
-float hpPercentage = 0.2;
-float treasurePosX = random(40,560);
-float treasurePosY = random(60,420);
 
 void draw() {
-  if(gameState==false){
-    if(endState==true){
-      if(mouseX <= 436 && mouseX >= 206 && mouseY <= 355 && mouseY >= 308){
-        image(end1, 0, 0);
-        endFlash = true;
-      }else{
-        image(end2, 0, 0);
-        endFlash = false;
+  
+  
+	switch(gameState){
+    case GAME_START:
+      image(title,0,0);
+      image(startNormal,248,360);
+      if(mouseX>248 && mouseX<248+144){
+        if(mouseY>360 && mouseY<360+60){
+          if(mousePressed){
+            gameState=GAME_RUN;
+          }else{
+            image(startHovered,248,360);
+          }
+        }
       }
-    }else{
-      if(mouseX <= 449 && mouseX >= 198 && mouseY <= 414 && mouseY >= 376){
-        image(start1, 0, 0);
-        startFlash = true;
-      }else{
-        image(start2, 0, 0);
-        startFlash = false;
-      }
-    }
-  }else{
-    image(bg1,-640+bg1Pos,0);
-    image(bg2,-640+bg2Pos,0);
-    bg1Pos += 10;
-    bg1Pos = bg1Pos % 1280;
-    bg2Pos += 10;
-    bg2Pos = bg2Pos % 1280; //background scrolling
-    fill(255,0,0);
-    noStroke();
-    image(treasure, treasurePosX, treasurePosY); //treasure
-    if(upState == true && heroPosY>0){
-      heroPosY -= heroSpeed;
-    }
-    if(downState == true && heroPosY<429){
-      heroPosY += heroSpeed;
-    }
-    if(leftState == true && heroPosX>0){
-      heroPosX -= heroSpeed;
-    }
-    if(rightState == true && heroPosX<589){
-      heroPosX += heroSpeed;
-    }
-    image(fighter, heroPosX, heroPosY); // fighter position
-    if(heroPosX + 51 >= treasurePosX && heroPosX <= treasurePosX + 41 && heroPosY + 51 >= treasurePosY && heroPosY <= treasurePosY + 41){
-      if(hpPercentage < 0.99){
-        hpPercentage += 0.1;
-        treasurePosX = random(40,560);
-        treasurePosY = random(60,420);
-      }
-    }
-    if(heroPosX + 51 >= enemyPosX - 100 && heroPosX <= enemyPosX -39 && heroPosY + 51 >= enemyPosY && heroPosY <= enemyPosY + 61){
-      if(hpPercentage > 0.21){
-        hpPercentage -= 0.2;
-        enemyPosX = 0;
-        score -= 1;
-        println("CRASH");
-      }else{
-        gameState=false;
-        endState=true;
-      }
-    }
-    if(enemyPosX <= 6){
-      enemyPosY = random(60,420);
-      score += 1;
-    }
-    image(enemy, -100+enemyPosX, enemyPosY); 
-    float Yspeed = enemyPosY*0.93+heroPosY*0.07;
-    enemyPosY = Yspeed;
-    println("Y " + Yspeed);
-    float Xspeed = 8 + abs(enemyPosX - heroPosX)/40;
-    enemyPosX += Xspeed;
-    //println("X " + Xspeed);
-    enemyPosX = enemyPosX % 760; //enemy movement
-    rect(50,34,hpAmount*hpPercentage,17); //hp amount
-    image(hp, 40, 30); //hp outline
-  }
-}
+    break;
+    
+    case GAME_RUN:
+    
+      //blue background
+      backGround=loadImage("img/bg.jpg");
+      image(backGround,0,0);   
+  
+      //soil background
+      soil=loadImage("img/soil.png");
+      image(soil,0,160);   
+  
+      //grassland
+      noStroke();
+      fill(124,204,25);
+      rect(0,145,640,15);  
 
-void mousePressed(){
-    if(endFlash){
-        endState = false;
-        hpPercentage = 0.2;
-        enemyPosX = 0;
-        heroPosX = 550;
-        heroPosY = 240;
-        treasurePosX = random(40,560);
-        treasurePosY = random(60,420);
-        score = -1;
-        endFlash = false;
+      //sun
+      fill(255,255,0);
+      ellipse(590,50,130,130);  //sun outside
+      fill(253,184,19);
+      ellipse(590,50,120,120);  //sun inside
+  
+      //three lives
+      switch(lifeNumber){
+        case 3:
+        image(life,10,10);
+        image(life,80,10);
+        image(life,150,10);
+        break;
+        case 2:
+        image(life,10,10);
+        image(life,80,10);
+        break;
+        case 1:
+        image(life,10,10);
+        break;
+        case 0:
+        gameState=GAME_LOSE;
+        break;
       }
-    if(startFlash){
-        gameState = true;
-        startFlash = false;
+      if(lifeNumber>=4){
+        lifeNumber=3;
       }
-}
-
+        
+      //cabbage
+      if(!eatCabbage){
+        cabbageX=80*a;
+        cabbageY=160+80*b;
+        image(cabbage,cabbageX,cabbageY);
+      }
+      
+      if((cabbageX+60)>groundhogX && (cabbageY+60)>groundhogY){
+        if(cabbageX<(groundhogX+60) && cabbageY<(groundhogY+60)){
+          lifeNumber=lifeNumber+1;
+          eatCabbage=true;
+          cabbageX=0;
+          cabbageY=0;
+          println(lifeNumber);
+          
+        }
+      }
+      
+      //soldier
+      soldier=loadImage("img/soldier.png");    
+      soldierY=160+80*n;
+      image(soldier,-80+soldierX,soldierY);    
+      soldierX +=5;
+      soldierX %=720;    //soldier moving(X)  640+80
+      
+      //groundhog
+      
+      if(downPress){
+        image(groundhogDown,groundhogX,groundhogY);
+        groundhogY += (float)80/15.0;
+      }else if(rightPress){
+        image(groundhogRight,groundhogX,groundhogY);
+        groundhogX += (float)80/15.0;
+      }else if(leftPress){
+        image(groundhogLeft,groundhogX,groundhogY);
+        groundhogX -= (float)80/15.0;
+      }else{
+        image(groundhog,groundhogX,groundhogY);
+      }
+      if(isMoving){
+        frames++;
+        if(frames == 15){
+          isMoving = false;
+          downPress = false;
+          rightPress = false;
+          leftPress = false;
+          frames =0;
+        }
+      }
+      
+      //boundary detection
+      if(groundhogX>560){
+        groundhogX=560;
+      }
+      if(groundhogX<0){
+        groundhogX=0;
+      }
+      if(groundhogY>400){
+        groundhogY=400;
+      }
+      if(groundhogY<80){
+        groundhogY=80;
+      }
+      
+      //groundhog meet soldier
+      if((groundhogX+60)>(soldierX-80) && (groundhogY+60)>soldierY){
+        if(groundhogX<(soldierX-80+60) && groundhogY<(soldierY+60)){
+          lifeNumber=lifeNumber-1;
+          groundhogX=320;
+          groundhogY=80;
+          frames =0;
+          isMoving = false;
+          downPress = false;
+          rightPress = false;
+          leftPress = false;
+          println(lifeNumber);
+          }
+        }
+        
+      
+      break;
+      
+      case GAME_LOSE:
+      image(gameover,0,0);
+      image(restartNormal,248,360);
+      if(mouseX>248 && mouseX<248+144){
+        if(mouseY>360 && mouseY<360+60){
+          if(mousePressed){
+            gameState=GAME_RUN;
+            lifeNumber=2;
+            n=floor(random(4));  //change soldier position
+            a=floor(random(8));  //change cabbage position
+            b=floor(random(4));  //change cabbage position
+            eatCabbage=false;
+            frames =0;
+            isMoving = false;
+            downPress = false;
+            rightPress = false;
+            leftPress = false;
+          }else{
+            image(restartHovered,248,360);
+          }
+        }
+      }
+      
+      break;
+    
+  }  //switch
+  
+  
+  
+}  //void draw
 
 void keyPressed(){
-  if(key==CODED){
-    switch(keyCode){
-      case UP:
-        upState = true;
-        break;
-      case DOWN:
-        downState = true;
-        break;
-      case LEFT:
-        leftState = true;
-        break;
-      case RIGHT:
-        rightState = true;
-        break;
+  if(!isMoving){
+    if (key == CODED) {
+      switch (keyCode) {
+       case DOWN:
+         downPress=true;
+         isMoving = true;
+         break;
+       case LEFT:
+         leftPress=true;
+         isMoving = true;
+         break;
+       case RIGHT:
+         rightPress=true;
+         isMoving = true;
+         break;
+      }
     }
   }
 }
-
-void keyReleased(){
-  if(key==CODED){
-    switch(keyCode){
-      case UP:
-        upState = false;
-        break;
-      case DOWN:
-        downState = false;
-        break;
-      case LEFT:
-        leftState = false;
-        break;
-      case RIGHT:
-        rightState = false;
-        break;
-    }
-  }
-}
+  
